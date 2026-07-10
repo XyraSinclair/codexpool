@@ -1,8 +1,9 @@
-# cxp — codexpool
+# codexpool
 
 Make several ChatGPT Pro accounts behave as **one** Codex login.
 
-`cxp` is a localhost token-injecting proxy. Codex is pointed at it (via
+`cxp` (the codexpool CLI — the command name stays short) is a localhost
+token-injecting proxy. Codex is pointed at it (via
 `chatgpt_base_url`). For each request the proxy picks an account by **live usage**,
 injects that account's bearer token, and streams the response straight back. It is
 the **sole refresher** per account — single-use rotating refresh tokens are never
