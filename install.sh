@@ -11,10 +11,11 @@ BINDIR="$HOME/bin"
 [ -d "$BINDIR" ] || BINDIR="/usr/local/bin"
 mkdir -p "$BINDIR" "$POOL/bin"
 
-# 2. install the two source files
+# 2. install the canonical proxy/CLI and bridge
 install -m 0755 "$HERE/cxp"        "$BINDIR/cxp"
-install -m 0755 "$HERE/cxp-bridge" "$POOL/cxp-bridge"
-echo "installed: $BINDIR/cxp, $POOL/cxp-bridge"
+install -m 0700 "$HERE/cxp"        "$POOL/cxp-agent"
+install -m 0700 "$HERE/cxp-bridge" "$POOL/cxp-bridge"
+echo "installed: $BINDIR/cxp, $POOL/cxp-agent, $POOL/cxp-bridge"
 
 # 3. the codex shim — routes model-running `codex` calls through the pool,
 #    while auth/meta subcommands go straight to the real codex. Resolves the
@@ -45,7 +46,6 @@ cat <<EOF
 cxp installed. Next:
   pip install -r "$HERE/requirements.txt"     # aiohttp (bridge is stdlib-only)
   export PATH="$POOL/bin:\$PATH"               # so the codex shim wins (add to your rc)
-  cxp import                                   # seed pool from ~/.codex/accounts/*.auth.json
   cxp login                                    # add accounts via OAuth (repeat per account)
   cxp install-agent                            # launchd keepalive
   cxp status                                   # verify

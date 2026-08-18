@@ -22,7 +22,6 @@ headroom — no chat is killed, no token is double-spent.
 ## Install
 ```bash
 ./install.sh            # places cxp + cxp-bridge, sets up the codex shim
-cxp import              # seed the pool from ~/.codex/accounts/*.auth.json
 cxp login               # add accounts via OAuth (browser); repeat per account
 cxp install-agent       # launchd: keep the proxy alive across reboots/crashes
 cxp status              # verify
@@ -34,11 +33,8 @@ Requires Python 3.9+ and `aiohttp` (`pip install -r requirements.txt`).
 ```
 cxp [codex args...]   launch codex through the pool (default)
 cxp status            per-account live usage + routing + proxy health
-cxp import            (re)seed the pool from ~/.codex/accounts/*.auth.json
 cxp login [hint]      sign one account into the pool (browser OAuth)
 cxp auth-log          recent auth/login events
-cxp quarantine        move pooled ~/.codex credentials aside so cxp owns refresh
-cxp unquarantine      restore files moved by `cxp quarantine`
 cxp proxy             run the proxy in the foreground (normally auto-spawned)
 cxp stop | restart    control the shared proxy
 cxp install-agent     install the launchd keepalive agent
@@ -92,9 +88,9 @@ path 3 closes).
 ## Safety / hygiene
 - Never commit credentials. `.gitignore` excludes `accounts/`, `*.auth.json`, logs,
   ports, and `codex-home/`. The source contains **no** secrets.
-- cxp must be the **only** token refresher for the pooled accounts. Do not run a
-  second refresher (e.g. the old `codex-hot-swap` daemon) against the same accounts
-  — that races the single-use refresh tokens and burns the accounts.
+- cxp must be the only Codex credential owner. It refuses to launch or refresh
+  while `~/.codex/auth.json` or `~/.codex/accounts/*.auth.json` exists; use
+  `cxp login` so every credential remains under `~/.codexpool/`.
 
 ## License
 MIT — see [LICENSE](LICENSE).
