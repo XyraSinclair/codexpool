@@ -1698,13 +1698,11 @@ def launch(codex_args, apply_preset: bool = True) -> None:
         "-c", "model_providers.codexpool.supports_websockets=false",
         "-c", "model_provider=codexpool",
     ]
-    # Interactive cosmetics. Skipped in passthrough mode (the transparent shim)
-    # so `codex exec --full-auto -m gpt-6-astra ...` keeps the caller's OWN flags.
+    # Model, effort, and service tier come from the canonical Codex config.
+    # Passthrough mode also leaves permissions and cosmetics to the caller.
     preset = [
         "--dangerously-bypass-approvals-and-sandbox",
         "-c", "model_reasoning_summary=detailed",
-        "-c", "model_reasoning_effort=xhigh",
-        "-m", "gpt-6-astra",
     ] if apply_preset else []
     real = real_codex_path()
     # codex >=0.146 drops pre-subcommand `-c` overrides for subcommands like

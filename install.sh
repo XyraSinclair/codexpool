@@ -41,6 +41,18 @@ SHIM
 chmod 0755 "$POOL/bin/codex"
 echo "installed: $POOL/bin/codex (shim)"
 
+# 4. interactive shortcuts share the canonical Codex defaults and pool preset.
+cat > "$BINDIR/codxh" <<'SHIM'
+#!/bin/sh
+exec "$HOME/.codexpool/cxp-agent" "$@"
+SHIM
+cat > "$BINDIR/codsol" <<'SHIM'
+#!/bin/sh
+exec "$HOME/.codexpool/cxp-agent" -m gpt-5.6-sol "$@"
+SHIM
+chmod 0755 "$BINDIR/codxh" "$BINDIR/codsol"
+echo "installed: $BINDIR/codxh, $BINDIR/codsol"
+
 cat <<EOF
 
 cxp installed. Next:

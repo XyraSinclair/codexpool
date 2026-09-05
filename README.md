@@ -32,6 +32,8 @@ Requires Python 3.9+ and `aiohttp` (`pip install -r requirements.txt`).
 ## Commands
 ```
 cxp [codex args...]   launch codex through the pool (default)
+codxh [codex args...] launch with the same interactive defaults as cxp
+codsol [codex args...] select GPT-5.6 Sol explicitly
 cxp status            per-account live usage + routing + proxy health
 cxp login [hint]      sign one account into the pool (browser OAuth)
 cxp auth-log          recent auth/login events
@@ -40,6 +42,9 @@ cxp stop | restart    control the shared proxy
 cxp install-agent     install the launchd keepalive agent
 cxp uninstall-agent   remove it
 ```
+
+Model, reasoning effort, and service tier come from `~/.codex/config.toml`;
+the pool projects that config into its Codex home before each launch.
 
 ## Architecture
 ```
