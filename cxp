@@ -710,7 +710,8 @@ async def refresh_account(sess: aiohttp.ClientSession, acct: Account,
                     "refresh_token": acct.refresh_token}
             try:
                 async with sess.post(REFRESH_URL, json=body,
-                                     headers={"Content-Type": "application/json"},
+                                     headers={"Content-Type": "application/json",
+                                              "Accept-Encoding": "identity"},
                                      timeout=aiohttp.ClientTimeout(total=30)) as r:
                     if r.status != 200:
                         # OAuth bodies are untrusted and may echo credentials.
@@ -785,7 +786,11 @@ async def probe_usage(sess: aiohttp.ClientSession, acct: Account,
             return
     headers = {"Authorization": "Bearer " + acct.access_token,
                "ChatGPT-Account-Id": acct.account_id,
-               "Accept": "application/json", "User-Agent": "cxp/0.1"}
+               "Accept": "application/json", "User-Agent": "cxp/0.1",
+               # Upstream serves brotli when offered; this aiohttp env cannot
+               # decode br (2026-09-04: every probe died 400 "Can not decode
+               # content-encoding: br", pinning the account to state=unknown).
+               "Accept-Encoding": "identity"}
     try:
         async with sess.get(WHAM_USAGE_URL, headers=headers,
                             timeout=aiohttp.ClientTimeout(total=15)) as r:
